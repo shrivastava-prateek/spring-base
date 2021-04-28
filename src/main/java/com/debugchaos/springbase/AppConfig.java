@@ -36,6 +36,16 @@ public class AppConfig {
 		return dataSourceBuilder.build();
 	}
 
+	@Bean(name = "postgres2")
+	public DataSource postgresDataSource2() {
+		DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
+		dataSourceBuilder.driverClassName("org.postgresql.Driver");
+		dataSourceBuilder.url("jdbc:postgresql://localhost:5433/postgres");
+		dataSourceBuilder.username("postgres");
+		dataSourceBuilder.password("somePassword");
+		return dataSourceBuilder.build();
+	}
+
 	@Bean(name= "postgresEntityManagerFactory")
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory() throws NamingException {
 		LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
@@ -48,10 +58,29 @@ public class AppConfig {
 		return em;
 	}
 
+	@Bean(name = "postgresEntityManagerFactory2")
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory2() throws NamingException {
+		LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+		em.setDataSource(postgresDataSource2());
+		em.setPackagesToScan("com.debugchaos.springbase.entity");
+		em.setPersistenceUnitName("postgresEntityManagerFactory2");
+		em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+		em.setJpaProperties(additionalProperties());
+		// rest of entity manager configuration
+		return em;
+	}
+
 	@Bean("postgresJpaTransaction")
-	public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
+	public PlatformTransactionManager transactionManager() throws NamingException {
 		JpaTransactionManager transactionManager = new JpaTransactionManager();
-		transactionManager.setEntityManagerFactory(emf);
+		transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
+		return transactionManager;
+	}
+
+	@Bean("postgresJpaTransaction2")
+	public PlatformTransactionManager transactionManager2() throws NamingException {
+		JpaTransactionManager transactionManager = new JpaTransactionManager();
+		transactionManager.setEntityManagerFactory(entityManagerFactory2().getObject());
 		return transactionManager;
 	}
 

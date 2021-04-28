@@ -7,20 +7,19 @@ import javax.persistence.PersistenceContext;
 
 import com.debugchaos.springbase.entity.Foo;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class FooDao {
+public class FooDao2 {
 
-	@PersistenceContext(unitName = "postgresEntityManagerFactory")
+	@PersistenceContext(unitName = "postgresEntityManagerFactory2")
 	private EntityManager entityManager;
 
 	public List<Foo> findAll() {
 		return entityManager.createQuery("from " + Foo.class.getName()).getResultList();
 	}
 
-	public void addFoo(Foo foo){
+	public void addFoo(Foo foo) {
 		entityManager.persist(foo);
 	}
 }
