@@ -1,12 +1,10 @@
-package com.debugchaos.springbase.entity;
+package com.debugchaos.springbase.transactionexperiments.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 @Entity
 public class Foo {
@@ -25,6 +23,17 @@ public class Foo {
 	
 	public Foo() {
 	}
+
+	
+
+
+	public Foo(Long id, String name, Integer age) {
+		this.id = id;
+		this.name = name;
+		this.age = age;
+	}
+
+
 
 
 	public Long getId() {

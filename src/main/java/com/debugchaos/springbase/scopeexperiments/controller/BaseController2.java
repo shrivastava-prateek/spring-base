@@ -1,10 +1,8 @@
-package com.debugchaos.springbase.controllers;
+package com.debugchaos.springbase.scopeexperiments.controller;
 
-import com.debugchaos.springbase.services.BaseService;
-import com.debugchaos.springbase.services.IBaseService;
+import com.debugchaos.springbase.scopeexperiments.service.IBaseService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 @Controller

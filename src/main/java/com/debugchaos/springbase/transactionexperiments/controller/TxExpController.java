@@ -1,21 +1,22 @@
-package com.debugchaos.springbase.controllers;
+package com.debugchaos.springbase.transactionexperiments.controller;
 
 import java.util.List;
 
-import com.debugchaos.springbase.entity.Foo;
-import com.debugchaos.springbase.services.FooService;
-import com.debugchaos.springbase.services.IBaseService;
+import com.debugchaos.springbase.scopeexperiments.service.IBaseService;
+import com.debugchaos.springbase.transactionexperiments.entity.Foo;
+import com.debugchaos.springbase.transactionexperiments.service.FooService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-//@Scope("prototype")
-public class BaseController {
+@RequestMapping("tx")
+public class TxExpController {
 	
 
 	@Autowired

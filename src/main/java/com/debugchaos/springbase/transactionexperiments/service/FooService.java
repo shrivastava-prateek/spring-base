@@ -1,14 +1,12 @@
-package com.debugchaos.springbase.services;
+package com.debugchaos.springbase.transactionexperiments.service;
 
 import java.util.List;
 
-import com.debugchaos.springbase.dao.FooDao;
-import com.debugchaos.springbase.dao.FooDao2;
-import com.debugchaos.springbase.entity.Foo;
+import com.debugchaos.springbase.transactionexperiments.dao.FooDao;
+import com.debugchaos.springbase.transactionexperiments.entity.Foo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -25,7 +23,8 @@ public class FooService {
 		return dao.findAll();
 	}
 
-	@Transactional(value = "postgresJpaTransaction")
+	// @Transactional(value = "postgresJpaTransaction")
+	@Transactional(value = "postgresJpaTransactionJta")
 	public void addFoo(Foo foo){
 		dao.addFoo(foo);
 		snippets.addFoo(foo);
@@ -33,6 +32,10 @@ public class FooService {
 		
 	}
 
+	// if the below method is called from addFoo then a new transaction 
+	// won't be created because of the proxy, the methods called in 
+	// the same class will be called as normal methods
+	
 	//@Transactional(propagation = Propagation.REQUIRES_NEW, value = "postgresJpaTransaction")
 	public void addAnotherFoo(Foo foo) {
 		Foo foo2 = new Foo();
@@ -40,6 +43,9 @@ public class FooService {
 		dao.addFoo(foo2);
 		snippets.addAnotherFoo(foo);
 	}
+
+
+
 
 
 

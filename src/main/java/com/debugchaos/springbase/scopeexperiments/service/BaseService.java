@@ -1,4 +1,4 @@
-package com.debugchaos.springbase.services;
+package com.debugchaos.springbase.scopeexperiments.service;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
