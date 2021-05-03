@@ -6,11 +6,13 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jndi.JndiTemplate;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -30,12 +32,24 @@ public class AppConfig {
 	// transaction
 	// @Bean(name = "postgres")
 	// public DataSource postgresDataSource() {
-	// DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
-	// dataSourceBuilder.driverClassName("org.postgresql.Driver");
-	// dataSourceBuilder.url("jdbc:postgresql://localhost:5432/postgres");
-	// dataSourceBuilder.username("postgres");
-	// dataSourceBuilder.password("postgres");
-	// return dataSourceBuilder.build();
+	// 	DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
+	// 	dataSourceBuilder.driverClassName("org.postgresql.Driver");
+	// 	dataSourceBuilder.url("jdbc:postgresql://localhost:5432/postgres");
+	// 	dataSourceBuilder.username("postgres");
+	// 	dataSourceBuilder.password("postgres");
+	// 	return dataSourceBuilder.build();
+	// }
+
+	// This is required when not using XA datasources like in case of non-xa
+	// transaction
+	// @Bean(name = "postgres2")
+	// public DataSource postgresDataSource2() {
+	// 	DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
+	// 	dataSourceBuilder.driverClassName("org.postgresql.Driver");
+	// 	dataSourceBuilder.url("jdbc:postgresql://localhost:5433/postgres");
+	// 	dataSourceBuilder.username("postgres");
+	// 	dataSourceBuilder.password("somePassword");
+	// 	return dataSourceBuilder.build();
 	// }
 
 	// This is to find the datasource using jndi configured in weblogic
@@ -44,28 +58,23 @@ public class AppConfig {
 		return (DataSource) new JndiTemplate().getContext().lookup("jdbc/postgres1");
 	}
 
-	// This is required when not using XA datasources like in case of non-xa
-	// transaction
-	// @Bean(name = "postgres2")
-	// public DataSource postgresDataSource2() {
-	// DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
-	// dataSourceBuilder.driverClassName("org.postgresql.Driver");
-	// dataSourceBuilder.url("jdbc:postgresql://localhost:5433/postgres");
-	// dataSourceBuilder.username("postgres");
-	// dataSourceBuilder.password("somePassword");
-	// return dataSourceBuilder.build();
-	// }
-
 	// This is to find the datasource using jndi configured in weblogic
 	@Bean(name = "postgres2")
 	public DataSource postgresDataSource2() throws NamingException {
 		return (DataSource) new JndiTemplate().getContext().lookup("jdbc/postgres2");
 	}
 
+	// The JTA transaction is required when we need 2 Phase commit- weblogic
+	@Bean("postgresJpaTransactionJta")
+	public PlatformTransactionManager transactionManagerJta() throws NamingException {
+		JtaTransactionManager transactionManager = new WebLogicJtaTransactionManager();
+		return transactionManager;
+	}
+
 	@Bean(name = "postgresEntityManagerFactory")
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory() throws NamingException {
 		LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-		// em.setDataSource(postgresDataSource());
+		//em.setDataSource(postgresDataSource());
 		em.setJtaDataSource(postgresDataSource());// For JTA we need to have Jta datasource
 		em.setPackagesToScan("com.debugchaos.springbase.transactionexperiments.entity");
 		em.setPersistenceUnitName("postgresEntityManagerFactory");
@@ -77,7 +86,7 @@ public class AppConfig {
 	@Bean(name = "postgresEntityManagerFactory2")
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory2() throws NamingException {
 		LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-		// em.setDataSource(postgresDataSource2());
+		//em.setDataSource(postgresDataSource2());
 		em.setJtaDataSource(postgresDataSource2()); //For JTA we need to have Jta datasource
 		em.setPackagesToScan("com.debugchaos.springbase.transactionexperiments.entity");
 		em.setPersistenceUnitName("postgresEntityManagerFactory2");
@@ -88,29 +97,22 @@ public class AppConfig {
 
 	// JPA transaction is required when JTA is not being used
 	// @Bean("postgresJpaTransaction")
-	// public PlatformTransactionManager transactionManager() throws NamingException
-	// {
-	// JpaTransactionManager transactionManager = new JpaTransactionManager();
-	// transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
-	// return transactionManager;
+	// public PlatformTransactionManager transactionManager() throws NamingException {
+	// 	JpaTransactionManager transactionManager = new JpaTransactionManager();
+	// 	transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
+	// 	return transactionManager;
 	// }
 
-	// The JTA transaction is required when we need 2 Phase commit- weblogic
-	@Bean("postgresJpaTransactionJta")
-	// @Bean
-	public PlatformTransactionManager transactionManagerJta() throws NamingException {
-		JtaTransactionManager transactionManager = new WebLogicJtaTransactionManager();
-		return transactionManager;
-	}
-
+	
 	// JPA transaction is required when JTA is not being used
 	// @Bean("postgresJpaTransaction2")
-	// public PlatformTransactionManager transactionManager2() throws
-	// NamingException {
-	// JpaTransactionManager transactionManager = new JpaTransactionManager();
-	// transactionManager.setEntityManagerFactory(entityManagerFactory2().getObject());
-	// return transactionManager;
+	// public PlatformTransactionManager transactionManager2() throws NamingException {
+	// 	JpaTransactionManager transactionManager = new JpaTransactionManager();
+	// 	transactionManager.setEntityManagerFactory(entityManagerFactory2().getObject());
+	// 	return transactionManager;
 	// }
+
+	
 
 	Properties additionalProperties() {
 		Properties properties = new Properties();
