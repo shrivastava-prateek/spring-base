@@ -17,6 +17,7 @@ import com.debugchaos.springbase.transactionexperiments.entity.Foo;
 import com.debugchaos.springbase.transactionexperiments.service.FooService;
 import com.debugchaos.springbase.transactionexperiments.service.TransactionSnippets;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -102,7 +103,7 @@ class SpringBaseApplicationTests {
 	}
 
 	// This method is test scope can be tested with Spring boot test
-	@Test
+	@Disabled
 	public void checkScope() {
 
 		//BaseController baseController1 = applicationContext.getBean(BaseController.class);
