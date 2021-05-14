@@ -63,9 +63,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
+				<!-- <configuration>
 					<outputDirectory>C:\oracle\Middleware\Oracle_Home\user_projects\domains\base_domain\autodeploy</outputDirectory>
-				</configuration>
+				</configuration> -->
 		</plugin>
 		</plugins>
 	</build>
