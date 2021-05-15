@@ -19,7 +19,7 @@ public class TransactionSnippets {
 	private FooDao dao;
 
 	// @Transactional(propagation = Propagation.REQUIRED, value = "postgresJpaTransaction2")
-	@Transactional(propagation = Propagation.REQUIRED, value = "postgresJpaTransactionJta")
+	@Transactional(propagation = Propagation.REQUIRED, value = "postgres2Transaction")
 	public void addFoo(Foo foo) {
 		Foo foo3 = new Foo();
 		foo3.setName(foo.getName()+" from Transaction Snippets");

@@ -23,8 +23,7 @@ public class FooService {
 		return dao.findAll();
 	}
 
-	// @Transactional(value = "postgresJpaTransaction")
-	@Transactional(value = "postgresJpaTransactionJta")
+	@Transactional(value = "postgresTransaction")
 	public void addFoo(Foo foo){
 		dao.addFoo(foo);
 		snippets.addFoo(foo);
@@ -36,7 +35,7 @@ public class FooService {
 	// won't be created because of the proxy, the methods called in 
 	// the same class will be called as normal methods
 	
-	//@Transactional(propagation = Propagation.REQUIRES_NEW, value = "postgresJpaTransaction")
+	//@Transactional(propagation = Propagation.REQUIRES_NEW, value = "postgresTransaction")
 	public void addAnotherFoo(Foo foo) {
 		Foo foo2 = new Foo();
 		foo2.setName(foo.getName()+" from Foo Service Another method");
